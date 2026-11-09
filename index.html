@@ -54,6 +54,7 @@ dd{margin:0;font-weight:500;font-variant-numeric:tabular-nums;min-width:0;overfl
 .steps{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:12px}
 .steps .eyebrow{margin-bottom:2px}
 .now{font-weight:600}
+.note p{margin:4px 0 0;overflow-wrap:anywhere}
 .days{font-family:var(--mono);font-size:13px;color:var(--muted)}
 footer{font-size:12px;color:var(--muted);text-align:center}
 body{margin:0}
@@ -132,7 +133,7 @@ body{margin:0}
              (r.tp ? '<dt>Tespit yöntemi</dt><dd>'+esc(cap(r.tp))+'</dd>' : '')+
              (!open ? '<dt>Sonuç</dt><dd>'+esc(cap(r.s))+'</dd>' : '')+
              (!open && r.st ? '<dt>Sonuç tarihi</dt><dd>'+esc(r.st)+'</dd>' : '')+
-             '</dl></div>';
+             '</dl>'+(r.ac ? '<div class="note"><div class="eyebrow">Açıklama</div><p>'+esc(r.ac)+'</p></div>' : '')+'</div>';
     view.innerHTML = '<section class="card"><div><div class="eyebrow">Dosya numarası</div><div class="dno">'+esc(r.d)+'</div></div>'+st+
       '<div><div class="prod">'+esc(r.u||'Ürün grubu girilmemiş')+'</div>'+(r.x?'<div class="det">'+esc(r.x)+'</div>':'')+'</div>'+
       '<dl>'+dl+'</dl>'+steps+

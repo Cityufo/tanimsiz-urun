@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Etiket Yazdır · Kayıp Birimi</title>
+<script src="lib/qrcode.js"></script>
+<style>
+:root{--ink:#000;--paper:#fff;--bg:#e9edf2;--navy:#004063;--accent:#e8830c;--muted:#5d6b7a;
+  --sans:"DejaVu Sans","Segoe UI","Helvetica Neue",Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:var(--sans);color:#1f2933}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--navy);color:#fff}
+.bar b{font-size:15px}
+.bar span{font-size:13px;opacity:.85}
+.bar button{font:inherit;font-weight:700;font-size:15px;border:0;border-radius:6px;padding:10px 18px;background:var(--accent);color:#fff;cursor:pointer}
+.sheet{display:flex;flex-wrap:wrap;gap:20px;padding:24px;justify-content:center}
+.label{width:100mm;height:100mm;background:var(--paper);color:var(--ink);padding:4.5mm;display:grid;grid-template-rows:auto auto 1fr auto;gap:0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.top{display:flex;justify-content:space-between;font-weight:700;font-size:3mm;letter-spacing:.02em;border-bottom:.6mm solid var(--ink);padding-bottom:1.4mm}
+.dno{font-weight:700;font-size:7.6mm;line-height:1.1;margin-top:2mm;white-space:nowrap}
+.prod{margin-top:2.4mm;overflow:hidden}
+.prod .big{font-weight:700;font-size:7.4mm;line-height:1.1}
+.prod .big.m{font-size:5.8mm}.prod .big.s{font-size:4.6mm}
+.prod .det{font-size:3.8mm;line-height:1.25;margin-top:1.2mm;text-transform:uppercase;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.prod .third{font-size:3.3mm;margin-top:1mm}
+.bottom{display:grid;grid-template-columns:1fr 34mm;gap:3mm;border-top:.4mm solid var(--ink);padding-top:2mm}
+.k{font-size:2.5mm}.v{font-weight:700;font-size:4.1mm;margin-bottom:1.2mm}
+.ct{font-size:2.45mm;line-height:1.38}.ct b{font-size:2.6mm}
+.qr{display:flex;flex-direction:column;align-items:flex-end;gap:1mm}
+.qr img,.qr svg{width:34mm;height:34mm;display:block}
+.qr small{font-weight:700;font-size:2.45mm;white-space:nowrap}
+.err{max-width:640px;margin:40px auto;background:#fff;padding:20px;border-radius:8px;border-left:4px solid var(--accent)}
+@page{size:100mm 100mm;margin:0}
+@media print{
+  body{background:#fff}
+  .bar,.err{display:none}
+  .sheet{display:block;padding:0}
+  .label{box-shadow:none;page-break-after:always;break-after:page}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div><b>Etiket önizleme · 100 × 100 mm</b><br><span id="info">Yazdırırken yazıcı: ZDesigner ZD421 · Kenar boşluğu: Yok · Ölçek: %100</span></div><button id="print">Yazdır</button></div>
+<div class="sheet" id="sheet"></div>
+<script>
+(function(){
+  var SITE = location.origin + location.pathname.replace(/etiket\.html$/, '');
+  var KISILER = [['Emircan Kepenek','0531 668 06 73'],['Ahmet Taha Aras','0530 386 65 10'],['Sergen Bulut','0538 685 03 08'],['Yücel Yıldırım','0539 570 58 43']];
+  function esc(s){ var d=document.createElement('div'); d.textContent=s==null?'':String(s); return d.innerHTML; }
+  // Excel'den gelen adres: etiket.html#d=...&t=...&u=...&x=...&g=...&k=...&r=...  (birden çok etiket ';;' ile ayrılır)
+  function parse(){
+    var h = location.hash.replace(/^#/, ''); if(!h) return [];
+    return h.split(';;').map(function(part){
+      var o = {}; part.split('&').forEach(function(kv){ var i=kv.indexOf('='); if(i>0){ try{ o[kv.slice(0,i)] = decodeURIComponent(kv.slice(i+1).replace(/\+/g,' ')); }catch(e){ o[kv.slice(0,i)] = kv.slice(i+1); } } });
+      if(!o.d && /^[A-Z]{3}-\d{4}-\d{2}-\d{3,4}$/.test(part)) o.d = part;
+      return o;
+    }).filter(function(o){ return o.d; });
+  }
+  function qrSvg(text){
+    var q = qrcode(0, 'M'); q.addData(text); q.make();
+    return q.createSvgTag({cellSize: 4, margin: 0, scalable: true});
+  }
+  function label(o){
+    var big = o.u || 'Ürün grubu girilmemiş';
+    var cls = big.length <= 14 ? '' : (big.length <= 24 ? 'm' : 's');
+    var yer = o.y || (o.r === 'URO' ? 'Bölge' : 'Merkez depo');
+    var third = o.g || (o.k ? 'Geliş: ' + o.k : '');
+    return '<div class="label">'+
+      '<div class="top"><span>CITY LOJİSTİK · KAYIP BİRİMİ</span><span>TANIMSIZ ÜRÜN</span></div>'+
+      '<div class="dno">'+esc(o.d)+'</div>'+
+      '<div class="prod"><div class="big '+cls+'">'+esc(big)+'</div>'+(o.x?'<div class="det">'+esc(o.x)+'</div>':'')+(third?'<div class="third">'+esc(third)+'</div>':'')+'</div>'+
+      '<div class="bottom"><div><div class="k">Kayıt tarihi</div><div class="v">'+esc(o.t||'')+'</div><div class="k">Bulunduğu yer</div><div class="v">'+esc(yer)+'</div>'+
+        '<div class="ct"><b>Bilgi: kayip@citylojistik.com</b><br>'+KISILER.map(function(p){return esc(p[0])+'  '+p[1];}).join('<br>')+'</div></div>'+
+        '<div class="qr">'+qrSvg(SITE + '#' + o.d)+'<small>Detaylı bilgi için okutun</small></div></div>'+
+      '</div>';
+  }
+  function render(list){
+    var sheet = document.getElementById('sheet');
+    if(!list.length){ sheet.innerHTML = '<div class="err">Etiket bilgisi yok. Bu sayfa Excel\'deki ETİKET sayfasındaki "Etiketi aç" bağlantısıyla açılır.</div>'; return; }
+    sheet.innerHTML = list.map(label).join('');
+    document.getElementById('info').textContent = list.length + ' etiket · yazıcı: ZDesigner ZD421 · kenar boşluğu: yok · ölçek: %100';
+  }
+  var list = parse();
+  // Yalnızca dosya numarası geldiyse eksik bilgiler data.json'dan tamamlanır
+  var need = list.some(function(o){ return !o.u && !o.t; });
+  if(need){
+    fetch('data.json?v=' + Date.now()).then(function(r){ return r.json(); }).then(function(j){
+      var by = {}; j.rows.forEach(function(r){ by[r.d] = r; });
+      list = list.map(function(o){ var r = by[o.d]; if(!r || o.u || o.t) return o;
+        return {d:r.d, t:r.t, u:r.u, x:r.x, g:r.g, k:r.k, r:r.r, y:r.y}; });
+      render(list);
+    }).catch(function(){ render(list); });
+  } else render(list);
+  window.addEventListener('hashchange', function(){ location.reload(); });
+  document.getElementById('print').addEventListener('click', function(){ window.print(); });
+})();
+</script>
+</body>
+</html>

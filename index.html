@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Tanımsız Ürün Kartı · City Lojistik Kayıp Birimi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: tek sütun, telefon öncelikli kart; üstte birim şeridi, ortada dosya kartı, altta iletişim. */
+:root{
+  --bg:#f3f5f8; --card:#ffffff; --fg:#1f2933; --muted:#5d6b7a; --line:#d9dde3;
+  --navy:#004063; --accent:#e8830c; --ok:#2e7d32; --okbg:#e6f2e7; --wait:#9c5700; --waitbg:#fff3d6;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1a24; --card:#152532; --fg:#e6edf3; --muted:#9fb0c0; --line:#26394a;
+  --navy:#7fb8dc; --accent:#f39a33; --ok:#7cc884; --okbg:#173022; --wait:#f0c060; --waitbg:#33290f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1a24; --card:#152532; --fg:#e6edf3; --muted:#9fb0c0; --line:#26394a;
+  --navy:#7fb8dc; --accent:#f39a33; --ok:#7cc884; --okbg:#173022; --wait:#f0c060; --waitbg:#33290f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.45}
+.wrap{max-width:520px;margin:0 auto;padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:14px}
+.unit{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:3px solid var(--accent);padding-bottom:8px}
+.unit b{font-size:13px;letter-spacing:.08em;color:var(--navy)}
+.unit span{font-size:12px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:14px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dno{font-family:var(--mono);font-weight:600;font-size:clamp(22px,7vw,30px);color:var(--navy);letter-spacing:.01em;word-break:break-all}
+.status{display:inline-flex;align-items:center;gap:8px;font-weight:600;padding:6px 12px;border-radius:999px;font-size:14px;width:fit-content}
+.status.wait{background:var(--waitbg);color:var(--wait)}
+.status.ok{background:var(--okbg);color:var(--ok)}
+.status i{width:8px;height:8px;border-radius:50%;background:currentColor;display:block}
+.prod{font-size:22px;font-weight:700;line-height:1.2;text-wrap:balance}
+.det{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0;border-top:1px solid var(--line);padding-top:12px}
+dt{color:var(--muted);font-size:13px}
+dd{margin:0;font-weight:500;font-variant-numeric:tabular-nums;min-width:0;overflow-wrap:anywhere}
+.btn{display:block;text-align:center;text-decoration:none;font-weight:600;background:var(--navy);color:var(--card);padding:12px;border-radius:8px}
+.btn:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.hint{font-size:12px;color:var(--muted);margin:0}
+.contacts{display:grid;gap:8px}
+.contacts h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600}
+.person{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-block:6px}
+.person:last-child{border-bottom:0}
+.person a,.person span.num{font-family:var(--mono);color:var(--navy);text-decoration:none;user-select:all;white-space:nowrap}
+.search{display:flex;gap:8px}
+.search input{flex:1;min-width:0;font:inherit;font-family:var(--mono);padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg)}
+.search button{font:inherit;font-weight:600;border:0;border-radius:8px;padding:0 16px;background:var(--accent);color:#fff;cursor:pointer}
+.miss{border-left:4px solid var(--accent)}
+footer{font-size:12px;color:var(--muted);text-align:center}
+body{margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="unit"><b>CITY LOJİSTİK · KAYIP BİRİMİ</b><span>Tanımsız ürün kartı</span></div>
+
+  <main id="view"></main>
+
+  <section class="card contacts" aria-label="İletişim">
+    <h2>Bu ürünle ilgili bilgi için</h2>
+    <div class="person"><span>Kayıp Birimi e-posta</span><a href="mailto:kayip@citylojistik.com">kayip@citylojistik.com</a></div>
+    <div class="person"><span>Yücel Yıldırım</span><a href="tel:+905395705843">0539 570 58 43</a></div>
+    <div class="person"><span>Emircan Kepenek</span><a href="tel:+905316680673">0531 668 06 73</a></div>
+    <div class="person"><span>Ahmet Taha Aras</span><a href="tel:+905303866510">0530 386 65 10</a></div>
+    <div class="person"><span>Sergen Bulut</span><a href="tel:+905386850308">0538 685 03 08</a></div>
+  </section>
+
+  <section class="card">
+    <div class="eyebrow">Başka bir dosya</div>
+    <form class="search" id="f"><input id="q" placeholder="UTO-2026-10-0078" autocomplete="off" aria-label="Dosya numarası"><button>Göster</button></form>
+  </section>
+
+  <footer id="upd"></footer>
+</div>
+
+<script>
+(function(){
+  var rows = [], byNo = {}, loaded = false;
+  var view = document.getElementById('view');
+  view.innerHTML = '<section class="card"><div class="eyebrow">Yükleniyor…</div></section>';
+  fetch('data.json?v=' + Date.now()).then(function(r){ return r.json(); }).then(function(j){
+    rows = j.rows; rows.forEach(function(r){ byNo[r.d] = r; }); loaded = true;
+    document.getElementById('upd').textContent = 'Bilgiler ' + j.updated + ' tarihinde güncellendi · her iş günü sabahı yenilenir';
+    render();
+  }).catch(function(){
+    view.innerHTML = '<section class="card miss"><div class="eyebrow">Bağlantı sorunu</div><div>Dosya bilgileri şu an yüklenemedi. Sayfayı yenileyin ya da aşağıdaki numaralardan Kayıp Birimi\'ne ulaşın.</div></section>';
+  });
+  var RAPOR = {UFO:'Merkez depo tanımsız ürün', UTO:'Merkez depo tanımsız lastik', URO:'Bölge tanımsız ürünü'};
+  function esc(s){ var d=document.createElement('div'); d.textContent = s==null?'':String(s); return d.innerHTML; }
+  function norm(s){ return (s||'').toUpperCase().replace(/\s+/g,'').replace(/İ/g,'I'); }
+
+  function render(){
+    var key = decodeURIComponent((location.hash||'').replace(/^#/,''));
+    key = norm(key);
+    if(!key){
+      view.innerHTML = '<section class="card"><div class="eyebrow">Tanımsız ürün kartı</div>'+
+        '<div class="prod">Ürün etiketindeki QR kodu okutun ya da dosya numarasını aşağıya yazın.</div>'+
+        '<p class="hint">Depodaki ' + rows.filter(function(r){return !r.s;}).length + ' ürün araştırılıyor.</p></section>';
+      return;
+    }
+    var r = byNo[key];
+    if(!r){
+      view.innerHTML = '<section class="card miss"><div class="eyebrow">Dosya</div><div class="dno">'+esc(key)+'</div>'+
+        '<div>Bu dosyanın bilgileri henüz yayınlanmadı. Yeni açılan dosyalar bir sonraki iş günü sabahı görünür.</div>'+
+        '<p class="hint">Acil durumda aşağıdaki numaralardan Kayıp Birimi\'ne ulaşabilirsiniz.</p></section>';
+      return;
+    }
+    var open = !r.s;
+    var st = open
+      ? '<span class="status wait"><i></i>' + (r.r==='URO' ? 'Bölgede · araştırılıyor' : 'Depoda · araştırılıyor') + '</span>'
+      : '<span class="status ok"><i></i>Sonuçlandı · ' + esc(r.s.charAt(0)+r.s.slice(1).toLocaleLowerCase('tr')) + '</span>';
+    var dl = '<dt>Rapor</dt><dd>'+esc(r.r+' · '+RAPOR[r.r])+'</dd>'+
+             '<dt>Kayıt tarihi</dt><dd>'+esc(r.t)+'</dd>'+
+             '<dt>Bulunduğu yer</dt><dd>'+esc(open ? r.y : '—')+'</dd>'+
+             (r.k ? '<dt>Geliş kaynağı</dt><dd>'+esc(r.k)+'</dd>' : '')+
+             (r.g ? '<dt>Sınıf</dt><dd>'+esc(r.g)+'</dd>' : '')+
+             (!open && r.st ? '<dt>Sonuç tarihi</dt><dd>'+esc(r.st)+'</dd>' : '');
+    view.innerHTML = '<section class="card"><div><div class="eyebrow">Dosya numarası</div><div class="dno">'+esc(r.d)+'</div></div>'+st+
+      '<div><div class="prod">'+esc(r.u||'Ürün tanımı girilmemiş')+'</div>'+(r.x?'<div class="det">'+esc(r.x)+'</div>':'')+'</div>'+
+      '<dl>'+dl+'</dl>'+
+      (r.a ? '<a class="btn" href="'+esc(r.a)+'" target="_blank" rel="noopener">Fotoğraflar ve belgeler</a><p class="hint">Fotoğraflar şirket SharePoint\'indedir; City Lojistik hesabıyla açılır.</p>' : '')+
+      '</section>';
+  }
+  document.getElementById('f').addEventListener('submit', function(e){
+    e.preventDefault(); var v = norm(document.getElementById('q').value); if(v){ location.hash = v; render(); }
+  });
+  window.addEventListener('hashchange', function(){ if(loaded) render(); });
+})();
+</script>
+</body>
+</html>

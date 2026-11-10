@@ -61,6 +61,12 @@ body{margin:0;background:var(--bg);font-family:var(--sans);color:#1f2933}
     var q = qrcode(0, 'M'); q.addData(text); q.make();
     return q.createSvgTag({cellSize: 4, margin: 0, scalable: true});
   }
+  // QR, ilk bilgileri de taşır: kart sayfası dosya henüz güncellenmemiş olsa bile bunları gösterir
+  function qrUrl(o){
+    var e = encodeURIComponent, x = (o.x||'').slice(0, 60), parts = ['d='+e(o.d)];
+    [['t',o.t],['r',o.r],['u',o.u||''],['g',o.g],['k',o.k],['y',o.y],['x',x]].forEach(function(p){ if(p[1]!==undefined && p[1]!=='' || p[0]==='u') parts.push(p[0]+'='+e(p[1]||'')); });
+    return SITE + '#' + parts.join('&');
+  }
   function label(o){
     var big = o.u || 'Ürün grubu girilmemiş';
     var cls = big.length <= 14 ? '' : (big.length <= 24 ? 'm' : 's');
@@ -72,7 +78,7 @@ body{margin:0;background:var(--bg);font-family:var(--sans);color:#1f2933}
       '<div class="prod"><div class="big '+cls+'">'+esc(big)+'</div>'+(o.x?'<div class="det">'+esc(o.x)+'</div>':'')+(third?'<div class="third">'+esc(third)+'</div>':'')+'</div>'+
       '<div class="bottom"><div><div class="k">Kayıt tarihi</div><div class="v">'+esc(o.t||'')+'</div><div class="k">Bulunduğu yer</div><div class="v">'+esc(yer)+'</div>'+
         '<div class="ct"><b>Bilgi: kayip@citylojistik.com</b><br>'+KISILER.map(function(p){return esc(p[0])+'  '+p[1];}).join('<br>')+'</div></div>'+
-        '<div class="qr">'+qrSvg(SITE + '#' + o.d)+'<small>Detaylı bilgi için okutun</small></div></div>'+
+        '<div class="qr">'+qrSvg(qrUrl(o))+'<small>Detaylı bilgi için okutun</small></div></div>'+
       '</div>';
   }
   function render(list){

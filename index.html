@@ -93,22 +93,35 @@ body{margin:0}
     document.getElementById('upd').textContent = 'Bilgiler ' + j.updated + ' tarihinde güncellendi · her iş günü sabahı yenilenir';
     render();
   }).catch(function(){
+    if(fromQr().d){ loaded = true; render(); return; }
     view.innerHTML = '<section class="card miss"><div class="eyebrow">Bağlantı sorunu</div><div>Dosya bilgileri şu an yüklenemedi. Sayfayı yenileyin ya da aşağıdaki numaralardan Kayıp Birimi\'ne ulaşın.</div></section>';
   });
   var RAPOR = {UFO:'Merkez depo tanımsız ürün', UTO:'Merkez depo tanımsız lastik', URO:'Bölge tanımsız ürünü'};
   function esc(s){ var d=document.createElement('div'); d.textContent = s==null?'':String(s); return d.innerHTML; }
   function norm(s){ return (s||'').toUpperCase().replace(/\s+/g,'').replace(/İ/g,'I'); }
 
+  // Etiket QR'ı ilk bilgileri adresin içinde taşır: #d=...&t=...&u=... (eski etiketler: #DOSYA-NO)
+  function fromQr(){
+    var h = (location.hash||'').replace(/^#/,''), o = {};
+    if(h.indexOf('=') < 0){ try{ o.d = decodeURIComponent(h); }catch(e){ o.d = h; } return o; }
+    h.split('&').forEach(function(kv){ var i=kv.indexOf('='); if(i>0){ try{ o[kv.slice(0,i)] = decodeURIComponent(kv.slice(i+1)); }catch(e){ o[kv.slice(0,i)] = kv.slice(i+1); } } });
+    return o;
+  }
   function render(){
-    var key = decodeURIComponent((location.hash||'').replace(/^#/,''));
-    key = norm(key);
+    var q = fromQr();
+    var key = norm(q.d);
     if(!key){
       view.innerHTML = '<section class="card"><div class="eyebrow">Tanımsız ürün kartı</div>'+
         '<div class="prod">Ürün etiketindeki QR kodu okutun ya da dosya numarasını aşağıya yazın.</div>'+
         '<p class="hint">Depodaki ' + rows.filter(function(r){return !r.s;}).length + ' ürün araştırılıyor.</p></section>';
       return;
     }
-    var r = byNo[key];
+    var r = byNo[key], yeni = false;
+    if(!r && q.u !== undefined){
+      r = {d:key, r:q.r||key.slice(0,3), t:q.t||'', u:q.u||'', x:q.x||'', g:q.g||'', k:q.k||'', y:q.y||(key.slice(0,3)==='URO'?'Bölge':'Merkez depo'),
+           s:'', st:'', ds:'', tp:'', ac:'', a:''};
+      yeni = true;
+    }
     if(!r){
       view.innerHTML = '<section class="card miss"><div class="eyebrow">Dosya</div><div class="dno">'+esc(key)+'</div>'+
         '<div>Bu dosyanın bilgileri henüz yayınlanmadı. Yeni açılan dosyalar bir sonraki iş günü sabahı görünür.</div>'+
@@ -116,6 +129,7 @@ body{margin:0}
       return;
     }
     var open = !r.s;
+    var yeniNot = yeni ? '<p class="hint">Bu dosya yeni açıldı. Araştırma aşaması, açıklama ve fotoğraf bağlantısı bir sonraki güncellemede (her iş günü sabahı) eklenir.</p>' : '';
     function cap(v){ v=String(v||'').toLocaleLowerCase('tr'); return v.charAt(0).toLocaleUpperCase('tr')+v.slice(1); }
     var p = r.t.split('.'); var kd = new Date(+p[2], +p[1]-1, +p[0]);
     var gun = Math.max(0, Math.round((new Date().setHours(0,0,0,0) - kd) / 86400000));
@@ -123,7 +137,7 @@ body{margin:0}
       ? '<span class="status wait"><i></i>' + (r.r==='URO' ? 'Bölgede · araştırılıyor' : 'Depoda · araştırılıyor') + '</span>'
       : '<span class="status ok"><i></i>Sonuçlandı · ' + esc(cap(r.s)) + '</span>';
     var dl = '<dt>Rapor</dt><dd>'+esc(r.r+' · '+RAPOR[r.r])+'</dd>'+
-             '<dt>Kayıt tarihi</dt><dd>'+esc(r.t)+(open ? ' <span class="days">· '+gun+' gündür</span>' : '')+'</dd>'+
+             '<dt>Kayıt tarihi</dt><dd>'+esc(r.t)+(open ? ' <span class="days">· '+(gun===0?'bugün':gun+' gündür')+'</span>' : '')+'</dd>'+
              '<dt>Bulunduğu yer</dt><dd>'+esc(open ? r.y : 'Depodan çıktı')+'</dd>'+
              (r.k ? '<dt>Geliş kaynağı</dt><dd>'+esc(r.k)+'</dd>' : '')+
              (r.g ? '<dt>Sınıf</dt><dd>'+esc(r.g)+'</dd>' : '');
@@ -136,7 +150,7 @@ body{margin:0}
              '</dl>'+(r.ac ? '<div class="note"><div class="eyebrow">Açıklama</div><p>'+esc(r.ac)+'</p></div>' : '')+'</div>';
     view.innerHTML = '<section class="card"><div><div class="eyebrow">Dosya numarası</div><div class="dno">'+esc(r.d)+'</div></div>'+st+
       '<div><div class="prod">'+esc(r.u||'Ürün grubu girilmemiş')+'</div>'+(r.x?'<div class="det">'+esc(r.x)+'</div>':'')+'</div>'+
-      '<dl>'+dl+'</dl>'+steps+
+      '<dl>'+dl+'</dl>'+steps+yeniNot+
       (r.a ? '<a class="btn" href="'+esc(r.a)+'" target="_blank" rel="noopener">Fotoğraflar ve belgeler</a><p class="hint">Fotoğraflar şirket SharePoint\'indedir; City Lojistik hesabıyla açılır.</p>' : '')+
       '</section>';
   }
